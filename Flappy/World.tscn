@@ -1,0 +1,86 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://flappy-bird-assets-master/sprites/yellowbird-upflap.png" type="Texture" id=1]
+[ext_resource path="res://flappy-bird-assets-master/sprites/yellowbird-downflap.png" type="Texture" id=2]
+[ext_resource path="res://flappy-bird-assets-master/sprites/yellowbird-midflap.png" type="Texture" id=3]
+[ext_resource path="res://flappy-bird-assets-master/sprites/background-day.png" type="Texture" id=4]
+[ext_resource path="res://player.gd" type="Script" id=5]
+[ext_resource path="res://flappy-bird-assets-master/sprites/pipe-green.png" type="Texture" id=6]
+[ext_resource path="res://object.gd" type="Script" id=7]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 18.0
+height = 2.0
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 25.5, 267 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 15.5, 96 )
+
+[node name="World" type="Node"]
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 240, 427 )
+scale = Vector2( 1.66667, 1.67188 )
+texture = ExtResource( 4 )
+
+[node name="Player" type="RigidBody2D" parent="."]
+gravity_scale = 5.0
+script = ExtResource( 5 )
+velocidad = 222
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
+position = Vector2( 193.917, 377 )
+scale = Vector2( 1.58333, 1.58333 )
+frames = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2( 195, 378 )
+shape = SubResource( 2 )
+
+[node name="Po1" type="Position2D" parent="Player"]
+position = Vector2( 239, 354 )
+
+[node name="Po2" type="Position2D" parent="Player"]
+position = Vector2( 199, 431 )
+
+[node name="object" type="Node2D" parent="."]
+script = ExtResource( 7 )
+
+[node name="Pillar" type="Area2D" parent="object"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="object/Pillar"]
+position = Vector2( 16, 564 )
+shape = SubResource( 3 )
+
+[node name="Pipe-green2" type="Sprite" parent="object/Pillar/CollisionShape2D2"]
+position = Vector2( 3.8147e-06, -107 )
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="object/Pillar"]
+position = Vector2( 15, -166 )
+shape = SubResource( 3 )
+
+[node name="Pipe-green" type="Sprite" parent="object/Pillar/CollisionShape2D"]
+position = Vector2( -15, 166 )
+rotation = -3.14159
+texture = ExtResource( 6 )
+offset = Vector2( -15, 59 )
+
+[node name="coin" type="Area2D" parent="object"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="object/coin"]
+position = Vector2( 16, 200 )
+shape = SubResource( 4 )
+
+[connection signal="body_entered" from="object/Pillar" to="object" method="_on_Pillar_body_entered"]
+[connection signal="body_entered" from="object/coin" to="object" method="_on_coin_body_entered"]
